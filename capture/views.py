@@ -22,10 +22,11 @@ def upload(request):
 		dictData = json.loads(request.POST.get('jsonData', ''))
 		photoStrData = dictData['photoData']
 		valueStrData = dictData['valueData']
+		timeStrData = dictData['timeData']
 		format, imgstr = photoStrData.split(';base64,') 
 		ext = format.split('/')[-1] 
 		data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
 		fs = FileSystemStorage()
-		fileName = valueStrData+Extension
+		fileName = timeStrData+'_'+valueStrData+Extension
 		fs.save(fileName,data)
 	return render(request,'upload.html')

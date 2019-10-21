@@ -19,24 +19,55 @@
 	<script type="text/javascript" src="{% static '/webcamjs-master/webcam.min.js' %}"></script>
 	<!-- jquery for ajax -->
 	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<style type="text/css">
+		/* HIDE RADIO */
+		[type=radio] { 
+		  position: absolute;
+		  opacity: 0;
+		  width: 0;
+		  height: 0;
+		}
+
+		/* IMAGE STYLES */
+		[type=radio] + img {
+		  cursor: pointer;
+		}
+
+		/* CHECKED STYLES */
+		[type=radio]:checked + img {
+		  outline: 2px solid #f00;
+		}
+	</style>
 </head>
 <body>
-	<form name ="uploadData" method="POST" enctype="multipart/form-data"> 
 		{% csrf_token %}
 		<div id="results">照片:</div>
-	</form>
+		<form id="getValue">
+			<label>
+			  <input type="radio" name="test" value="10" checked>
+			  <img src="{% static 'img/10.png' %}">
+			</label>
+			<label>
+			  <input type="radio" name="test" value="50">
+			  <img src="{% static 'img/50.png' %}">
+			</label>
+			<label>
+			  <input type="radio" name="test" value="100">
+			  <img src="{% static 'img/100.png' %}">
+			</label>
+			<label>
+			  <input type="radio" name="test" value="500">
+			  <img src="{% static 'img/500.png' %}">
+			</label>
+			<label>
+			  <input type="radio" name="test" value="1000">
+			  <img src="{% static 'img/1000.png' %}">
+			</label>
+		</form>
 	
 	<h1>WebcamJS 上傳測試</h1>
 	<h3>照片格式 320x240 jpg檔案</h3>
-	
 	<div id="my_camera">照片:</div>
-	<form id="getValue">
-	  <input type="radio" name="gender" value="male" checked> Male<br>
-	  <input type="radio" name="gender" value="female"> Female<br>
-	  <input type="radio" name="gender" value="other"> Other<br><br>
-	  <input type="submit">
-	</form> 
-
 	
 	<!-- 設定webcam參數 -->
 	<script language="JavaScript">
@@ -59,6 +90,15 @@
 		});
 		// 設定js全域變數來儲存稍後產生的data uri
 		var strData;
+		// js 時間物件
+		var time=new Date();
+		var y = time.getFullYear().toString()+'/'
+		var m = (time.getMonth()+1).toString()+'/'
+		var d = time.getDate().toString()+' '
+		var h = time.getHours().toString()+'-'
+		var mi = time.getMinutes().toString()+'-'
+		var s = time.getSeconds().toString()
+		var timeName = y+m+d+h+mi+s
 		// 拍照程式
 		function take_snapshot() {
 			// webcam.snap會傳回一個base64的data uri image			
@@ -67,13 +107,7 @@
 				document.getElementById('results').innerHTML = 
 					'<h2>拍照結果:</h2>' + 
 					'<img src="'+data_uri+'" />' +
-					'<select id="newlocale">' +
-					  '<option value="volvo"><div >Volvo</div></option>' +
-					  '<option value="saab">Saab</option>' +
-					  '<option value="opel">Opel</option>' +
-					  '<option value="audi">Audi</option>' +
-					'</select>' +
-					'<input type="button" value="sendData" onclick="sendData(strData)" />'
+ 					'<input type="button" value="sendData" onclick="sendData(strData)" />'
 					;	
 			} );
 		}
@@ -81,15 +115,15 @@
 		function sendData(data_uri) {
 			var form = document.getElementById('getValue');
 			var value;
-			for(var i = 0; i < form.gender.length;i++) {
-				if (form.gender[i].checked) {
-					value = form.gender[i].value;
+			for(var i = 0; i < form.test.length;i++) {
+				if (form.test[i].checked) {
+					value = form.test[i].value;
 				}
 			}
 			$.ajax({
 				url: "/upload/",
 				type: "post",
-				data: {'jsonData':JSON.stringify({'valueData':value,'photoData': data_uri})},
+				data: {'jsonData':JSON.stringify({'valueData':value,'timeData':timeName,'photoData': data_uri})},
 				success: function() {
 					alert('upload ok.');		    
 				},
