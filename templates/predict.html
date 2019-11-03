@@ -19,54 +19,14 @@
 	<script type="text/javascript" src="{% static '/webcamjs-master/webcam.min.js' %}"></script>
 	<!-- jquery for ajax -->
 	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<style type="text/css">
-		/* HIDE RADIO */
-		[type=radio] { 
-		  position: absolute;
-		  opacity: 0;
-		  width: 0;
-		  height: 0;
-		}
-
-		/* IMAGE STYLES */
-		[type=radio] + img {
-		  cursor: pointer;
-		}
-
-		/* CHECKED STYLES */
-		[type=radio]:checked + img {
-		  outline: 2px solid #f00;
-		}
-	</style>
 </head>
 <body>
-		{% csrf_token %}
+		
 		<div id="results">照片:</div>
-		<form id="getValue">
-			<label>
-			  <input type="radio" name="test" value="10" checked>
-			  <img src="{% static 'img/10.jpg' %}">
-			</label>
-			<label>
-			  <input type="radio" name="test" value="50">
-			  <img src="{% static 'img/50.jpg' %}">
-			</label>
-			<label>
-			  <input type="radio" name="test" value="100">
-			  <img src="{% static 'img/100.jpg' %}">
-			</label>
-			<label>
-			  <input type="radio" name="test" value="500">
-			  <img src="{% static 'img/500.jpg' %}">
-			</label>
-			<label>
-			  <input type="radio" name="test" value="1000">
-			  <img src="{% static 'img/1000.jpg' %}">
-			</label>
-		</form>
+
 	
-	<h1>WebcamJS 上傳測試</h1>
-	<h3>照片格式 100x100 jpg檔案</h3>
+	<h1>Photo predict</h1>
+	<h3>照片格式 300x300 jpg檔案</h3>
 	<div id="my_camera">照片:</div>
 	
 	<!-- 設定webcam參數 -->
@@ -75,14 +35,18 @@
 			width: 300,
 			height: 300,
 			image_format: 'jpeg',
-			jpeg_quality: 100
+			jpeg_quality: 90
 		});
 		Webcam.attach( '#my_camera' );
 	</script>
-	
+	<div id='predict'>
+		<h1>判斷結果:</h1>
+	</div>
+	{{ ending }}
 	<form>
 		<input type=button value="Take Snapshot" onClick="take_snapshot()">
 	</form>
+
 	<!-- Code to handle taking the snapshot and displaying it locally -->
 	<script language="JavaScript">
 		$.ajaxSetup({
@@ -101,35 +65,24 @@
 			var h = time.getHours().toString()+'-'
 			var mi = time.getMinutes().toString()+'-'
 			var s = time.getSeconds().toString()
-			timeName = y+m+d+h+mi+s
+			timeName = y+m+d+h+mi+s			
 			// webcam.snap會傳回一個base64的data uri image			
 			Webcam.snap( function(data_uri) {
 				strData = data_uri;
 				document.getElementById('results').innerHTML = 
 					'<h2>拍照結果:</h2>' + 
-					'<img src="'+data_uri+'" />' +
- 					'<input type="button" value="sendData" onclick="sendData(strData)" />'
-					;	
+					'<img src="'+data_uri+'" />';						
 			} );
-		}
-		// 將圖片傳回view,傳回的格式是json所以要先把strData這個字串轉成json
-		function sendData(data_uri) {
-			var form = document.getElementById('getValue');
-			var value;
-			for(var i = 0; i < form.test.length;i++) {
-				if (form.test[i].checked) {
-					value = form.test[i].value;
-				}
-			}
+			// 將照片傳回view
 			$.ajax({
-				url: "/upload/",
+				url: "/predict/",
 				type: "post",
-				data: {'jsonData':JSON.stringify({'valueData':value,'timeData':timeName,'photoData': data_uri})},
+				data: {'jsonData':JSON.stringify({'timeData':timeName,'photoData': strData})},
 				success: function() {
-					alert('upload ok.');		    
+					document.getElementById('predict').innerHTML =
+						'<h1>判斷結果2:{{ ending }}</h1>'
 				},
-			});
-			document.getElementById('results').innerHTML = '照片:';
+			});			
 		}
 	</script>
 	

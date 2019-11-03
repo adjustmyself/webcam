@@ -15,14 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from capture.views import upload,home
+from capture.views import home,upload,predict,test
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('upload/', upload),
     path('home/', home),
+    path('upload/', upload),
+    path('predict/', predict),
+    path('test/', test)
     ]
 
 
