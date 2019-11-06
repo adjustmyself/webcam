@@ -5,12 +5,12 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>PREDICT</title>
+	<title>CLASSIFY</title>
 	<style type="text/css">		
 		h2, h3 { margin-top:0; }
 		form { margin-top: 15px; }
 		form > input { margin-right: 15px; }
-		#results {
+		  #results {
 		   border:1px solid;
 		   height: 405px; 
 		 }
@@ -22,7 +22,7 @@
 			cursor:pointer;
 			width: 100px;
 			height: 30px;
-			margin-bottom: 10px;			
+			margin-bottom: 10px;
 		}
 		.button:hover{
 			color:#003C9D;
@@ -47,32 +47,31 @@
 	<!-- =========  -->
 </head>
 <body>
-
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-	  <!-- Brand and toggle get grouped for better mobile display -->
-	  <div class="navbar-header">
-	    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse.collapse">
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse.collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-	    <a class="navbar-brand" href="/index/"><span>自動產品識別</span></a>
-	  </div>
-	  <div class="navbar-collapse collapse">
-	    <div class="menu">
-	      <ul class="nav nav-tabs" role="tablist">
-	        <li role="presentation"><a href="/index/">Home</a></li>
-	        <li role="presentation"><a href="/upload/">UPLOAD</a></li>
-	        <li role="presentation" class="active"><a href="/predict/">PREDICT</a></li>
-	        <li role="presentation"><a href="/classify/">CLAASIFY</a></li>
-	        <li role="presentation"><a href="/about/">ABOUT US</a></li>
-	      </ul>
-	    </div>
-	  </div>
-	</div>
-	</nav>
+        <a class="navbar-brand" href="/index/"><span>自動產品識別</span></a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <div class="menu">
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation"><a href="/index/">Home</a></li>
+            <li role="presentation"><a href="/upload/">UPLOAD</a></li>
+            <li role="presentation"><a href="/predict/">PREDICT</a></li>
+            <li role="presentation" class="active"><a href="/classify/">CLAASIFY</a></li>
+            <li role="presentation"><a href="/about/">ABOUT US</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
 
 	<div class="container">
 		<div class="windowPredict" align="center" style="border:1px solid;height: 480px">
@@ -85,9 +84,8 @@
 		</div>
 		<div id="results" class="windowPredict" align="center">
 			<h1>2.擷取結果:</h1>
-
 		</div>			
-		<div id='predict' align="center"  class="windowPredict" style="border:1px solid;height: 120px">
+		<div id='predict' align="center" class="windowPredict" style="border:1px solid;height: 120px">
 			<h1>3.判斷結果:</h1>
 			<h1>{{ answer }}</h1>
 		</div>
@@ -112,9 +110,10 @@
         </div>
       </div>
 
-      <a href="" class="scrollup"><i class="fa fa-chevron-up"></i></a>	
+      <a href="" class="scrollup"><i class="fa fa-chevron-up"></i></a>
 
-	
+
+    </div>	
 	<!-- 設定webcam參數 -->
 	<script language="JavaScript">
 		Webcam.set({
@@ -155,11 +154,11 @@
 			} );
 			// 將照片傳回view
 			$.ajax({
-				url: "/predict/",
+				url: "/classify/",
 				type: "post",
 				data: {'jsonData':JSON.stringify({'timeData':timeName,'photoData': strData})},
 				success: function() {
-						window.location.replace("/predictResult/");				
+					window.location.replace("/classifyResult/");		
 				},
 			});		
 		}
